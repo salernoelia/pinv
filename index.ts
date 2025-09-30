@@ -139,9 +139,9 @@ async function invertAllPDFsInFolder(folderPath: string): Promise<void> {
 
 async function main() {
   program
-    .name('winv')
+    .name('pinv')
     .description('A CLI tool to invert PDF colors')
-    .version('1.0.0')
+    .version('0.0.2')
     .argument('[path]', 'Path to PDF file or directory (defaults to current directory)')
     .action(async (inputPath?: string) => {
       try {

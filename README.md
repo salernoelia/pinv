@@ -1,4 +1,4 @@
-# winv
+# pinv
 
 ![Demo](./demo.gif)
 
@@ -8,17 +8,17 @@ Invert PDF colors from the command line.
 
 - Invert all PDFs in the current folder:
   ```
-  winv
+  pinv
   ```
 
   - Invert all PDFs in a folder:
   ```
-  winv path/to/folder
+  pinv path/to/folder
   ```
 
 - Invert a specific PDF:
   ```
-  winv path/to/file.pdf
+  pinv path/to/file.pdf
   ```
 
 
@@ -27,14 +27,14 @@ Invert PDF colors from the command line.
 After building, copy the binary to a directory in your PATH (e.g. `/usr/local/bin`):
 
 ```bash
-sudo cp /Users/<user>/winv /usr/local/bin/winv
+sudo cp /Users/<user>/pinv /usr/local/bin/pinv
 ```
 
 
 ## Build manually
 
 ```
-bun build ./index.ts --compile --outfile winv
+bun build ./index.ts --compile --outfile pinv
 ```
 
 Creates `*_inverted.pdf` for each processed file.

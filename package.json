@@ -1,12 +1,12 @@
 {
-  "name": "winv",
-  "version": "0.0.1",
+  "name": "pinv",
+  "version": "0.0.2",
   "description": "A CLI tool to invert PDF colors",
   "module": "index.ts",
   "type": "module",
   "private": false,
   "bin": {
-    "winv": "./index.ts"
+    "pinv": "./index.ts"
   },
   "scripts": {
     "start": "bun run index.ts",

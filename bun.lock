@@ -2,7 +2,7 @@
   "lockfileVersion": 1,
   "workspaces": {
     "": {
-      "name": "winv",
+      "name": "pinv",
       "dependencies": {
         "chalk": "^5.3.0",
         "commander": "^11.1.0",
