@@ -1,10 +1,92 @@
 #!/usr/bin/env bun
 
 import { program } from 'commander';
-import { BlendMode, PDFDocument, rgb } from 'pdf-lib';
+import { PDFDocument, PDFName, PDFArray, PDFDict, PDFRef } from 'pdf-lib';
 import { readdir, readFile, writeFile, stat } from 'fs/promises';
 import { dirname, basename, join } from 'path';
 import chalk from 'chalk';
+
+const textEncoder = new TextEncoder();
+const EXT_G_STATE_KEY = 'GSDiff';
+
+const formatNumber = (value: number): string =>
+  Number(value.toFixed(4)).toString();
+
+function invertDocumentColors(pdfDoc: PDFDocument): void {
+  const context = pdfDoc.context;
+  const extGStateName = PDFName.of(EXT_G_STATE_KEY);
+  const diffExtGStateRef = context.register(
+    context.obj({
+      Type: 'ExtGState',
+      BM: PDFName.of('Difference'),
+    }),
+  );
+
+  for (const page of pdfDoc.getPages()) {
+    const { width, height } = page.getSize();
+    let resources =
+      page.node.get(PDFName.of('Resources')) as PDFDict | PDFRef | undefined;
+
+    if (!resources) {
+      resources = context.obj({});
+      page.node.set(PDFName.of('Resources'), resources);
+    }
+
+    const resourcesDict =
+      resources instanceof PDFRef ? context.lookup(resources, PDFDict) : resources;
+
+    let extGStates =
+      resourcesDict.get(PDFName.of('ExtGState')) as PDFDict | PDFRef | undefined;
+
+    if (!extGStates) {
+      extGStates = context.obj({});
+      resourcesDict.set(PDFName.of('ExtGState'), extGStates);
+    }
+
+    const extGStatesDict =
+      extGStates instanceof PDFRef ? context.lookup(extGStates, PDFDict) : extGStates;
+
+    if (!extGStatesDict.has(extGStateName)) {
+      extGStatesDict.set(extGStateName, diffExtGStateRef);
+    }
+
+    const widthStr = formatNumber(width);
+    const heightStr = formatNumber(height);
+
+    const whiteBackgroundRef = context.register(
+      context.stream(
+        textEncoder.encode(
+          `q\n1 1 1 rg\n0 0 ${widthStr} ${heightStr} re\nf\nQ\n`,
+        ),
+      ),
+    );
+
+    const invertOverlayRef = context.register(
+      context.stream(
+        textEncoder.encode(
+          `q\n/${EXT_G_STATE_KEY} gs\n1 1 1 rg\n0 0 ${widthStr} ${heightStr} re\nf\nQ\n`,
+        ),
+      ),
+    );
+
+    const contents = page.node.get(PDFName.of('Contents'));
+    const newContentsArray = context.obj([]);
+
+    newContentsArray.push(whiteBackgroundRef);
+
+    if (contents instanceof PDFArray) {
+      const count = contents.size();
+      for (let i = 0; i < count; i++) {
+        newContentsArray.push(contents.get(i));
+      }
+    } else if (contents) {
+      newContentsArray.push(contents);
+    }
+
+    newContentsArray.push(invertOverlayRef);
+    page.node.set(PDFName.of('Contents'), newContentsArray);
+  }
+}
 
 async function invertPDF(inputPath: string): Promise<void> {
   try {
@@ -12,26 +94,9 @@ async function invertPDF(inputPath: string): Promise<void> {
     
     const pdfBytes = await readFile(inputPath);
     const pdfDoc = await PDFDocument.load(pdfBytes);
-    
-    const pages = pdfDoc.getPages();
-    
-
-    for (const page of pages) {
-      const { width, height } = page.getSize();
-      
-     
-      page.drawRectangle({
-        x: 0,
-        y: 0,
-        width,
-        height,
-        color: rgb(1, 1, 1), 
-        blendMode: BlendMode.Difference
-      });
-    }
+    invertDocumentColors(pdfDoc);
     
     const outputBytes = await pdfDoc.save();
-    
 
     const dir = dirname(inputPath);
     const name = basename(inputPath, '.pdf');
