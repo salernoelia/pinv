@@ -9,15 +9,17 @@ Invert PDF colors from the command line.
   winv
   ```
 
+  - Invert all PDFs in a folder:
+  ```
+  winv path/to/folder
+  ```
+
 - Invert a specific PDF:
   ```
   winv path/to/file.pdf
   ```
 
-- Invert all PDFs in a folder:
-  ```
-  winv path/to/folder
-  ```
+
 
 ## Build manually
 
