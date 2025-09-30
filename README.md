@@ -1,5 +1,7 @@
 # winv
 
+![Demo](./demo.gif)
+
 Invert PDF colors from the command line.
 
 ## Usage (Binary)
