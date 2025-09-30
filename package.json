@@ -1,0 +1,31 @@
+{
+  "name": "winv",
+  "version": "1.0.0",
+  "description": "A CLI tool to invert PDF colors",
+  "module": "index.ts",
+  "type": "module",
+  "private": false,
+  "bin": {
+    "winv": "./index.ts"
+  },
+  "scripts": {
+    "start": "bun run index.ts",
+    "dev": "bun --watch index.ts",
+    "build": "bun build index.ts --outdir ./dist --target bun",
+    "install-global": "bun link"
+  },
+  "keywords": ["pdf", "invert", "cli", "colors"],
+  "author": "Your Name",
+  "license": "MIT",
+  "dependencies": {
+    "pdf-lib": "^1.17.1",
+    "commander": "^11.1.0",
+    "chalk": "^5.3.0"
+  },
+  "devDependencies": {
+    "@types/bun": "latest"
+  },
+  "peerDependencies": {
+    "typescript": "^5"
+  }
+}
