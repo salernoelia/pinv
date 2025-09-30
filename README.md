@@ -20,6 +20,14 @@ Invert PDF colors from the command line.
   ```
 
 
+## Add binary to PATH on macOS
+
+After building, copy the binary to a directory in your PATH (e.g. `/usr/local/bin`):
+
+```bash
+sudo cp /Users/<user>/winv /usr/local/bin/winv
+```
+
 
 ## Build manually
 
