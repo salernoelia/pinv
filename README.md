@@ -4,7 +4,13 @@
 
 Invert PDF colors from the command line.
 
-## Usage (Binary)
+## Install and Usage
+
+- Install with npm/bun from the npm repository.
+
+```sh
+bun install -g pinv-cli
+```
 
 - Invert all PDFs in the current folder:
   ```
@@ -20,21 +26,3 @@ Invert PDF colors from the command line.
   ```
   pinv path/to/file.pdf
   ```
-
-
-## Add binary to PATH on macOS
-
-After building, copy the binary to a directory in your PATH (e.g. `/usr/local/bin`):
-
-```bash
-sudo cp /Users/<user>/pinv /usr/local/bin/pinv
-```
-
-
-## Build manually
-
-```
-bun build ./index.ts --compile --outfile pinv
-```
-
-Creates `*_inverted.pdf` for each processed file.
